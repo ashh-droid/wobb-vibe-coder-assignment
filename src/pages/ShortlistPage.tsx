@@ -1,9 +1,11 @@
 import { useShortlistStore } from "@/store/shortlistStore";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { useState } from "react";
 
 export function ShortlistPage() {
   const shortlisted = useShortlistStore((state) => state.shortlisted);
   const removeProfile = useShortlistStore((state) => state.removeProfile);
+  const [toast, setToast] = useState<string | null>(null);
 
   return (
     <div className="p-4">
@@ -35,7 +37,12 @@ export function ShortlistPage() {
             </div>
 
             <button
-            onClick={() => removeProfile(profile.user_id)}
+            onClick={() => {
+                removeProfile(profile.user_id);
+                setToast("Removed successfully");
+
+                setTimeout(() => setToast(null), 1500);
+            }}
             className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
             >
             Remove
@@ -43,6 +50,11 @@ export function ShortlistPage() {
         </div>
         ))
       )}
+      {toast && (
+  <div className="fixed bottom-4 right-4 bg-black text-white px-3 py-2 rounded">
+    {toast}
+  </div>
+)}
     </div>
   );
 }

@@ -7,26 +7,37 @@ interface ShortlistStore {
   removeProfile: (userId: string) => void;
 }
 
-export const useShortlistStore = create<ShortlistStore>((set) => ({
-  shortlisted: [],
+const STORAGE_KEY = "shortlist-storage";
+
+const getInitialState = (): UserProfileSummary[] => {
+  if (typeof window === "undefined") return [];
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
+export const useShortlistStore = create<ShortlistStore>((set, get) => ({
+  shortlisted: getInitialState(),
 
   addProfile: (profile) =>
     set((state) => {
       const exists = state.shortlisted.some(
         (p) => p.user_id === profile.user_id
       );
-
       if (exists) return state;
 
-      return {
-        shortlisted: [...state.shortlisted, profile],
-      };
+      const updated = [...state.shortlisted, profile];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+      return { shortlisted: updated };
     }),
 
   removeProfile: (userId) =>
-    set((state) => ({
-      shortlisted: state.shortlisted.filter(
-        (profile) => profile.user_id !== userId
-      ),
-    })),
+    set((state) => {
+      const updated = state.shortlisted.filter(
+        (p) => p.user_id !== userId
+      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+      return { shortlisted: updated };
+    }),
 }));

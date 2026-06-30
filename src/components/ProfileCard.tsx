@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useShortlistStore } from "@/store/shortlistStore";
 import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
@@ -30,12 +31,13 @@ export function ProfileCard({
   };
 
   const addToShortlist = useShortlistStore((state) => state.addProfile);
-
   const shortlisted = useShortlistStore((state) => state.shortlisted);
 
   const isAlreadyAdded = shortlisted.some(
     (p) => p.user_id === profile.user_id
   );
+
+  const [toast, setToast] = useState<string | null>(null);
 
   return (
     <div
@@ -44,16 +46,22 @@ export function ProfileCard({
       data-search={searchQuery}
     >
       <img src={profile.picture} className="w-12 h-12 rounded-full" />
+
       <div className="text-left flex-1">
         <div className="font-bold">
           @{profile.username}
           <VerifiedBadge verified={profile.is_verified} />
         </div>
-        <div className="text-sm text-gray-600">{profile.fullname}</div>
-        <div className="text-sm">{formatFollowersLocal(profile.followers)}</div>
+
+        <div className="text-sm text-gray-600">
+          {profile.fullname}
+        </div>
+
+        <div className="text-sm">
+          {formatFollowersLocal(profile.followers)}
+        </div>
       </div>
-      {/* TODO: candidates must implement Add to List feature */}
-      {/* TODO: candidates must implement Add to List feature */}
+
       <button
         disabled={isAlreadyAdded}
         className={`px-3 py-1 text-sm rounded ${
@@ -64,10 +72,20 @@ export function ProfileCard({
         onClick={(e) => {
           e.stopPropagation();
           addToShortlist(profile);
+
+          setToast("Added to shortlist");
+
+          setTimeout(() => setToast(null), 1500);
         }}
       >
         {isAlreadyAdded ? "Added" : "Add to List"}
       </button>
+
+      {toast && (
+        <div className="fixed bottom-4 right-4 bg-black text-white px-3 py-2 rounded">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

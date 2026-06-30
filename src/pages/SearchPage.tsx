@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { ProfileList } from "@/components/ProfileList";
 import { extractProfiles, filterProfiles } from "@/utils/dataHelpers";
+import { useNavigate } from "react-router-dom";
 
 export function SearchPage() {
   const [platform, setPlatform] = useState<Platform>("instagram");
@@ -12,6 +13,7 @@ export function SearchPage() {
 
   const allProfiles = extractProfiles(platform);
   const filtered = filterProfiles(allProfiles, searchQuery);
+  const navigate = useNavigate();
 
   const handleProfileClick = (username: string) => {
     setClickCount(clickCount + 1);
@@ -23,6 +25,13 @@ export function SearchPage() {
       <p className="text-gray-500 mb-4 text-sm">
         Browse top creators across social platforms
       </p>
+
+      <button
+        onClick={() => navigate("/shortlist")}
+        className="mb-4 px-3 py-1 bg-black text-white rounded"
+      >
+        View Shortlist
+      </button>
 
       <PlatformFilter
         selected={platform}

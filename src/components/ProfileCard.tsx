@@ -1,3 +1,4 @@
+import { useShortlistStore } from "@/store/shortlistStore";
 import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
 import { VerifiedBadge } from "./VerifiedBadge";
@@ -28,6 +29,8 @@ export function ProfileCard({
     navigate(`/profile/${profile.username}?platform=${platform}`);
   };
 
+  const addToShortlist = useShortlistStore((state) => state.addProfile);
+
   return (
     <div
       onClick={handleClick}
@@ -46,9 +49,11 @@ export function ProfileCard({
       {/* TODO: candidates must implement Add to List feature */}
       {/* TODO: candidates must implement Add to List feature */}
       <button
-        disabled
-        className="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-not-allowed"
-        onClick={(e) => e.stopPropagation()}
+      className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+      onClick={(e) => {
+        e.stopPropagation();
+        addToShortlist(profile);
+        }}
       >
         Add to List
       </button>

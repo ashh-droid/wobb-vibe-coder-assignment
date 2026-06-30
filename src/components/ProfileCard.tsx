@@ -42,13 +42,22 @@ export function ProfileCard({
   return (
     <div
       onClick={handleClick}
-      className="flex items-center gap-3 p-3 border border-gray-300 mb-2 cursor-pointer hover:bg-gray-50 w-[700px]"
+      className={`flex items-center gap-4 p-4 mb-2 cursor-pointer w-[700px]
+        bg-white rounded-xl shadow-sm
+        hover:shadow-md transition-all duration-200
+        ${isAlreadyAdded ? "ring-1 ring-blue-200 border-blue-500" : ""}
+      `}
       data-search={searchQuery}
     >
-      <img src={profile.picture} className="w-12 h-12 rounded-full" />
+      {/* Avatar */}
+      <img
+        src={profile.picture}
+        className="w-12 h-12 rounded-full object-cover"
+      />
 
+      {/* Info */}
       <div className="text-left flex-1">
-        <div className="font-bold">
+        <div className="font-bold flex items-center gap-1">
           @{profile.username}
           <VerifiedBadge verified={profile.is_verified} />
         </div>
@@ -57,14 +66,15 @@ export function ProfileCard({
           {profile.fullname}
         </div>
 
-        <div className="text-sm">
+        <div className="text-sm text-gray-500">
           {formatFollowersLocal(profile.followers)}
         </div>
       </div>
 
+      {/* Button */}
       <button
         disabled={isAlreadyAdded}
-        className={`px-3 py-1 text-sm rounded ${
+        className={`px-3 py-1 text-sm rounded transition-all duration-200 transform hover:scale-105 ${
           isAlreadyAdded
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
@@ -74,15 +84,15 @@ export function ProfileCard({
           addToShortlist(profile);
 
           setToast("Added to shortlist");
-
           setTimeout(() => setToast(null), 1500);
         }}
       >
         {isAlreadyAdded ? "Added" : "Add to List"}
       </button>
 
+      {/* Toast */}
       {toast && (
-        <div className="fixed bottom-4 right-4 bg-black text-white px-3 py-2 rounded">
+        <div className="fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg animate-bounce">
           {toast}
         </div>
       )}

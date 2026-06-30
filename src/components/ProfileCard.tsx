@@ -31,6 +31,12 @@ export function ProfileCard({
 
   const addToShortlist = useShortlistStore((state) => state.addProfile);
 
+  const shortlisted = useShortlistStore((state) => state.shortlisted);
+
+  const isAlreadyAdded = shortlisted.some(
+    (p) => p.user_id === profile.user_id
+  );
+
   return (
     <div
       onClick={handleClick}
@@ -49,13 +55,18 @@ export function ProfileCard({
       {/* TODO: candidates must implement Add to List feature */}
       {/* TODO: candidates must implement Add to List feature */}
       <button
-      className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-      onClick={(e) => {
-        e.stopPropagation();
-        addToShortlist(profile);
+        disabled={isAlreadyAdded}
+        className={`px-3 py-1 text-sm rounded ${
+          isAlreadyAdded
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-blue-500 text-white hover:bg-blue-600"
+        }`}
+        onClick={(e) => {
+          e.stopPropagation();
+          addToShortlist(profile);
         }}
       >
-        Add to List
+        {isAlreadyAdded ? "Added" : "Add to List"}
       </button>
     </div>
   );

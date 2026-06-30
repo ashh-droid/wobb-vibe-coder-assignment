@@ -1,5 +1,10 @@
 # 🚀 Vibe Coder Assignment – Influencer Discovery App
 
+🌐 Live Demo  
+https://vibe-coder-assignment-v1-ashhdroid.vercel.app/
+
+---
+
 A simple but polished influencer discovery and shortlist management app built with React, TypeScript, Vite, Tailwind CSS, and Zustand.
 
 Built as part of a frontend assignment focused on UI/UX, state management, and component design.

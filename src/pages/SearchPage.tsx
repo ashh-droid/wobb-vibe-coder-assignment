@@ -6,53 +6,77 @@ import { ProfileList } from "@/components/ProfileList";
 import { extractProfiles, filterProfiles } from "@/utils/dataHelpers";
 import { useNavigate } from "react-router-dom";
 
+import { button } from "@/styles/ui";
+
 export function SearchPage() {
   const [platform, setPlatform] = useState<Platform>("instagram");
   const [searchQuery, setSearchQuery] = useState("");
   const [clickCount, setClickCount] = useState(0);
 
-  const allProfiles = extractProfiles(platform);
-  const filtered = filterProfiles(allProfiles, searchQuery);
   const navigate = useNavigate();
 
+  const allProfiles = extractProfiles(platform);
+  const filtered = filterProfiles(allProfiles, searchQuery);
+
   const handleProfileClick = (username: string) => {
-    setClickCount(clickCount + 1);
+    setClickCount((prev) => prev + 1);
     console.log("Clicked profile:", username, "total clicks:", clickCount);
   };
 
   return (
-    <Layout title="Find Influencers">
-      <p className="text-gray-500 mb-4 text-sm">
-        Browse top creators across social platforms
+    <Layout title="Discover Creators">
+      {/* Subtitle */}
+      <p className="text-gray-500 mb-6">
+        Search and shortlist influencers across platforms
       </p>
 
-      <button
-        onClick={() => navigate("/shortlist")}
-        className="mb-4 px-3 py-1 bg-black text-white rounded"
-      >
-        View Shortlist
-      </button>
+      {/* Header Actions */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="text-sm text-gray-500">
+          Showing{" "}
+          <span className="font-medium text-gray-700">
+            {filtered.length}
+          </span>{" "}
+          of{" "}
+          <span className="font-medium text-gray-700">
+            {allProfiles.length}
+          </span>
+        </div>
 
-      <PlatformFilter
-        selected={platform}
-        onChange={(p) => {
-          setPlatform(p);
-          setSearchQuery("");
-        }}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+        <button
+          onClick={() => navigate("/shortlist")}
+          className={`
+            ${button}
+            bg-white border border-gray-200 shadow-sm text-gray-700
+            hover:shadow-md
+          `}
+        >
+          View Shortlist
+        </button>
+      </div>
 
-      <p className="text-xs text-gray-400 mb-2">
-        Showing {filtered.length} of {allProfiles.length} on {platform}
-      </p>
+      {/* Filters */}
+      <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+        <PlatformFilter
+          selected={platform}
+          onChange={(p) => {
+            setPlatform(p);
+            setSearchQuery("");
+          }}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+        />
+      </div>
 
-      <ProfileList
-        profiles={filtered}
-        platform={platform}
-        searchQuery={searchQuery}
-        onProfileClick={handleProfileClick}
-      />
+      {/* List */}
+      <div className="flex flex-col gap-3">
+        <ProfileList
+          profiles={filtered}
+          platform={platform}
+          searchQuery={searchQuery}
+          onProfileClick={handleProfileClick}
+        />
+      </div>
     </Layout>
   );
 }

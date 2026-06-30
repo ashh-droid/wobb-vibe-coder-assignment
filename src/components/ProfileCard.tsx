@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
 import { VerifiedBadge } from "./VerifiedBadge";
 
+import { card, button, primaryButton } from "@/styles/ui";
+
 interface ProfileCardProps {
   profile: UserProfileSummary;
   platform: Platform;
@@ -25,11 +27,6 @@ export function ProfileCard({
 }: ProfileCardProps) {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (onProfileClick) onProfileClick(profile.username);
-    navigate(`/profile/${profile.username}?platform=${platform}`);
-  };
-
   const addToShortlist = useShortlistStore((state) => state.addProfile);
   const shortlisted = useShortlistStore((state) => state.shortlisted);
 
@@ -39,12 +36,17 @@ export function ProfileCard({
 
   const [toast, setToast] = useState<string | null>(null);
 
+  const handleClick = () => {
+    if (onProfileClick) onProfileClick(profile.username);
+    navigate(`/profile/${profile.username}?platform=${platform}`);
+  };
+
   return (
     <div
       onClick={handleClick}
-      className={`flex items-center gap-4 p-4 mb-2 cursor-pointer w-[700px]
-        bg-white rounded-xl shadow-sm
-        hover:shadow-md transition-all duration-200
+      className={`
+        ${card}
+        flex items-center gap-4 p-4 mb-2 cursor-pointer w-[700px]
         ${isAlreadyAdded ? "ring-1 ring-blue-200 border-blue-500" : ""}
       `}
       data-search={searchQuery}
@@ -74,11 +76,10 @@ export function ProfileCard({
       {/* Button */}
       <button
         disabled={isAlreadyAdded}
-        className={`px-3 py-1 text-sm rounded transition-all duration-200 transform hover:scale-105 ${
-          isAlreadyAdded
-            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-blue-500 text-white hover:bg-blue-600"
-        }`}
+        className={`
+          ${button}
+          ${isAlreadyAdded ? "bg-gray-300 text-gray-500 cursor-not-allowed" : primaryButton}
+        `}
         onClick={(e) => {
           e.stopPropagation();
           addToShortlist(profile);

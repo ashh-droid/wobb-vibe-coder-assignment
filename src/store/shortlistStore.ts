@@ -15,7 +15,7 @@ const getInitialState = (): UserProfileSummary[] => {
   return stored ? JSON.parse(stored) : [];
 };
 
-export const useShortlistStore = create<ShortlistStore>((set, get) => ({
+export const useShortlistStore = create<ShortlistStore>((set) => ({
   shortlisted: getInitialState(),
 
   addProfile: (profile) =>
